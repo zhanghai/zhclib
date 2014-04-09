@@ -12,12 +12,7 @@
 #include "LinkedList.h"
 
 
-typedef struct tagStackNode StackNode;
-typedef struct tagStackNode{
-    StackNode *previous;
-    StackNode *next;
-    void *data;
-} StackNode;
+typedef LinkedListNode StackNode;
 
 
 typedef struct {

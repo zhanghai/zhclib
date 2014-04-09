@@ -9,16 +9,17 @@
 #define __USE_GNU_STRCASESTR__
 #endif
 
-// For toupper() and tolower()
+/* For toupper() and tolower() */
 #include <ctype.h>
 #ifdef __USE_GNU_STRCASESTR__
-#define __USE_GNU
+#define _GNU_SOURCE
 #endif
 #include <string.h>
 #ifdef __USE_GNU_STRCASESTR__
-#undef __USE_GNU
+#undef _GNU_SOURCE
 #endif
 #include <strings.h>
+#include <stdarg.h>
 
 #include "array.h"
 #include "Memory.h"
@@ -27,13 +28,20 @@
 string string_EMPTY = "";
 
 
+string string_allocate(size_t length) {
+    return Memory_allocate((length + 1) * sizeof(char));
+}
+
+string string_reallocate(string theString, size_t length) {
+    return Memory_reallocate(theString, (length + 1) * sizeof(char));
+}
+
 void string_copy(string source, string destination) {
     strcpy(destination, source);
 }
 
 string string_clone(string theString) {
-    string clone = Memory_allocate(
-            (string_length(theString) + 1) * sizeof(char));
+    string clone = string_allocate(string_length(theString));
     string_copy(theString, clone);
     return clone;
 }
@@ -110,8 +118,8 @@ void string_toLowerCase(string theString) {
  */
 string string_append(string theString, string extra) {
     size_t oldLength = string_length(theString);
-    theString = Memory_reallocate(theString,
-            (oldLength + string_length(extra) + 1) * sizeof(char));
+    theString = string_reallocate(theString,
+            oldLength + string_length(extra));
     strcpy(theString + oldLength, extra);
     return theString;
 }
@@ -124,8 +132,8 @@ string string_append(string theString, string extra) {
  */
 string string_concatenate(string first, string second) {
     size_t firstLength = string_length(first);
-    string concatenated = Memory_allocate(
-            (firstLength + string_length(second) + 1) * sizeof(char));
+    string concatenated = string_allocate(
+            firstLength + string_length(second));
     strcpy(concatenated + firstLength, second);
     return concatenated;
 }
@@ -139,11 +147,37 @@ string string_concatenate(string first, string second) {
  */
 string string_subString(string theString, size_t start, size_t end) {
     size_t length = end - start;
-    string subString = Memory_allocate((length + 1) * sizeof(char));
+    string subString = string_allocate(length);
     strncpy(subString, theString + start, length);
     theString[length] = '\0';
     return subString;
 }
+
+#ifdef __USE_GNU_VASPRINTF__
+string string_format(string format, ...) {
+    string result = null;
+    va_list arguments;
+    va_start(arguments, format);
+    vasprintf(&result, format, arguments);
+    va_end(arguments);
+    return result;
+}
+#else
+string string_format(string format, ...) {
+    size_t length;
+    string result;
+    va_list arguments;
+    va_start(arguments, format);
+    length = vsnprintf(null, 0, format, arguments);
+    if (length < 0) {
+        return null;
+    }
+    result = string_allocate(length);
+    vsprintf(result, format, arguments);
+    va_end(arguments);
+    return result;
+}
+#endif
 
 /**
  * Make a deep copy of a string array.

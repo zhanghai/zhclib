@@ -39,8 +39,8 @@ void *Stack_peek(Stack *this) {
  * @note This implementation prevents {@link deleteNode} from free
  *       the returned data by setting the node to null before calling
  *       it.
- *       You may want to override this function to deal with memory
- *       management.
+ *       You may want to override this function to deal with other
+ *       types of memory management.
  */
 void *Stack_pop(Stack *this) {
     StackNode *tail = _(this, tail);

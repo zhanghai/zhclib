@@ -6,14 +6,27 @@
 #ifndef _STRING_H_
 #define _STRING_H_
 
+#ifdef __gnu_linux__
+#define __USE_GNU_VASPRINTF__
+#endif
 
 #include "primitives.h"
 
+#ifdef __USE_GNU_VASPRINTF__
+#define _GNU_SOURCE
+#endif
 #include "stdio.h"
+#ifdef __USE_GNU_VASPRINTF__
+#undef _GNU_SOURCE
+#endif
 
 
 extern string string_EMPTY;
 
+
+string string_allocate(size_t length);
+
+string string_reallocate(string theString, size_t length);
 
 void string_copy(string source, string destination);
 
@@ -44,6 +57,8 @@ string string_append(string theString, string extra);
 string string_concatenate(string first, string second);
 
 string string_subString(string theString, size_t start, size_t end);
+
+string string_format(string format, ...);
 
 void string_array_clone(string source[], string destination[],
         size_t size);
