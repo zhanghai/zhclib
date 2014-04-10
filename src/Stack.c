@@ -29,9 +29,15 @@ OBJECT_DEFINE_DELETE(Stack)
 
 /**
  * Peek the data at the top of a {@link Stack} without popping it.
+ * @return The data at the top of this stack, or null if empty.
  */
 void *Stack_peek(Stack *this) {
-    return _(this, tail)->data;
+    StackNode *tail = _(this, tail);
+    if (tail == null) {
+        return null;
+    } else {
+        return tail->data;
+    }
 }
 
 /**
@@ -41,9 +47,13 @@ void *Stack_peek(Stack *this) {
  *       it.
  *       You may want to override this function to deal with other
  *       types of memory management.
+ * @return The data at the top of this stack, or null if empty.
  */
 void *Stack_pop(Stack *this) {
     StackNode *tail = _(this, tail);
+    if (tail == null) {
+        return null;
+    }
     void *data = tail->data;
     /* HACK: Protect data from finalization. */
     tail->data = null;
