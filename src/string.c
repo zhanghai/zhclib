@@ -62,26 +62,219 @@ int string_compareIgnoreCase(string theString1, string theString2) {
     return strcasecmp(theString1, theString2);
 }
 
-bool string_contains(string theString, string subString) {
-    return strstr(theString, subString) != null;
+size_t string_indexOf(string theString, string subString) {
+    string position = strstr(theString, subString);
+    if (position == null) {
+        return -1;
+    } else {
+        return position - theString;
+    }
 }
 
-#ifdef __USE_GNU_STRCASESTR__
-bool string_containsIgnoreCase(string theString, string subString) {
-    return strcasestr(theString, subString) != null;
-}
-#else
-bool string_containsIgnoreCase(string theString, string subString) {
+#ifndef __USE_GNU_STRCASESTR__
+string strcasestr(string theString, string subString) {
+
     string stringUpper = string_clone(theString),
-            subStringUpper = string_clone(subString);
+            subStringUpper = string_clone(subString),
+            position;
+
     string_toUpperCase(stringUpper);
     string_toUpperCase(subStringUpper);
-    bool result = strstr(stringUpper, subStringUpper) != null;
+
+    position = strstr(stringUpper, subStringUpper);
     Memory_free(stringUpper);
     Memory_free(subStringUpper);
-    return result;
+
+    return position;
 }
 #endif
+
+size_t string_indexOfIgnoreCase(string theString, string subString) {
+    string position = strcasestr(theString, subString);
+    if (position == null) {
+        return -1;
+    } else {
+        return position - theString;
+    }
+}
+
+size_t string_lastIndexOf(string theString, string subString) {
+
+    string stringReversed = string_clone(theString),
+            subStringReversed = string_clone(subString),
+            position;
+
+    string_reverse(stringReversed);
+    string_reverse(subStringReversed);
+
+    position = strstr(stringReversed, subStringReversed);
+    Memory_free(stringReversed);
+    Memory_free(subStringReversed);
+
+    if (position == null) {
+        return -1;
+    } else {
+        return string_length(theString) - 1
+                - (position - stringReversed);
+    }
+}
+
+size_t string_lastIndexOfIgnoreCase(string theString,
+        string subString) {
+
+    string stringUpper = string_clone(theString),
+            subStringUpper = string_clone(subString);
+    size_t index;
+
+    string_toUpperCase(stringUpper);
+    string_toUpperCase(subStringUpper);
+
+    index = string_lastIndexOf(stringUpper, subStringUpper);
+    Memory_free(stringUpper);
+    Memory_free(subStringUpper);
+
+    return index;
+}
+
+bool string_contains(string theString, string subString) {
+    return string_indexOf(theString, subString) != -1;
+}
+
+bool string_containsIgnoreCase(string theString, string subString) {
+    return string_indexOfIgnoreCase(theString, subString) != -1;
+}
+
+bool string_startsWith(string theString, string prefix) {
+    return string_indexOf(theString, prefix) == 0;
+}
+
+bool string_startsWithIgnoreCase(string theString, string prefix) {
+    return string_indexOfIgnoreCase(theString, prefix) == 0;
+}
+
+bool string_endsWith(string theString, string suffix) {
+    return string_lastIndexOf(theString, suffix) ==
+            string_length(theString) - string_length(suffix);
+}
+
+bool string_endsWithIgnoreCase(string theString, string suffix) {
+    return string_lastIndexOfIgnoreCase(theString, suffix) ==
+            string_length(theString) - string_length(suffix);
+}
+
+size_t string_indexOfChar(string theString, char theChar) {
+    string position = strchr(theString, theChar);
+    if (position == null) {
+        return -1;
+    } else {
+        return position - theString;
+    }
+}
+
+size_t string_indexOfCharIgnoreCase(string theString, char theChar) {
+
+    string stringUpper = string_clone(theString);
+    size_t index;
+
+    string_toUpperCase(stringUpper);
+    theChar = toupper(theChar);
+
+    index = string_indexOfChar(stringUpper, theChar);
+    Memory_free(stringUpper);
+
+    return index;
+}
+
+size_t string_lastIndexOfChar(string theString, char theChar) {
+    string position = strrchr(theString, theChar);
+    if (position == null) {
+        return -1;
+    } else {
+        return position - theString;
+    }
+}
+
+size_t string_lastIndexOfCharIgnoreCase(string theString,
+        char theChar) {
+
+    string stringUpper = string_clone(theString);
+    size_t index;
+
+    string_toUpperCase(stringUpper);
+    theChar = toupper(theChar);
+
+    index = string_lastIndexOfChar(stringUpper, theChar);
+    Memory_free(stringUpper);
+
+    return index;
+}
+
+bool string_containsChar(string theString, char theChar) {
+    return string_indexOfChar(theString, theChar) != -1;
+}
+
+bool string_containsCharIgnoreCase(string theString, char theChar) {
+    return string_indexOfCharIgnoreCase(theString, theChar) != -1;
+}
+
+size_t string_indexOfWithin(string theString, string chars) {
+    string position = strpbrk(theString, chars);
+    if (position == null) {
+        return -1;
+    } else {
+        return position - theString;
+    }
+}
+
+size_t string_indexOfOutside(string theString, string chars) {
+
+    string start = theString,
+            end = theString + string_length(theString);
+
+    while (start != end && string_indexOfWithin(start, chars) == 0) {
+        ++start;
+    }
+
+    if (start == end) {
+        return -1;
+    } else {
+        return start - theString;
+    }
+}
+
+size_t string_indexOfWithinIgnoreCase(string theString,
+        string chars) {
+
+    string stringUpper = string_clone(theString),
+            charsUpper = string_clone(chars);
+    size_t index;
+
+    string_toUpperCase(stringUpper);
+    string_toUpperCase(charsUpper);
+
+    index = string_indexOfWithin(stringUpper, charsUpper);
+    Memory_free(stringUpper);
+    Memory_free(charsUpper);
+
+    return index;
+}
+
+size_t string_indexOfOutsideIgnoreCase(string theString,
+        string chars) {
+
+    string stringUpper = string_clone(theString),
+            charsUpper = string_clone(chars);
+    size_t index;
+
+    string_toUpperCase(stringUpper);
+    string_toUpperCase(charsUpper);
+
+    index = string_indexOfOutside(stringUpper, charsUpper);
+    Memory_free(stringUpper);
+    Memory_free(charsUpper);
+
+    return index;
+}
 
 size_t string_length(string theString) {
     return strlen(theString);
@@ -106,6 +299,17 @@ void string_toLowerCase(string theString) {
     for (i = 0; i < size; ++i) {
         // No conversion will be done if not possible.
         theString[i] = tolower(theString[i]);
+    }
+}
+
+void string_reverse(string theString) {
+    char *start = theString,
+            *end = start + string_length(theString) - 1,
+            temp;
+    while (start < end) {
+        SWAP(*start, *end, temp);
+        ++start;
+        --end;
     }
 }
 

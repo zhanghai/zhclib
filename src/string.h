@@ -40,9 +40,48 @@ int string_compare(string theString1, string theString2);
 
 int string_compareIgnoreCase(string theString1, string theString2);
 
+size_t string_indexOf(string theString, string subString);
+
+size_t string_indexOfIgnoreCase(string theString, string subString);
+
+size_t string_lastIndexOf(string theString, string subString);
+
+size_t string_lastIndexOfIgnoreCase(string theString,
+        string subString);
+
 bool string_contains(string theString, string subString);
 
 bool string_containsIgnoreCase(string theString, string subString);
+
+bool string_startsWith(string theString, string prefix);
+
+bool string_startsWithIgnoreCase(string theString, string prefix);
+
+bool string_endsWith(string theString, string suffix);
+
+bool string_endsWithIgnoreCase(string theString, string suffix);
+
+size_t string_indexOfChar(string theString, char theChar);
+
+size_t string_indexOfCharIgnoreCase(string theString, char theChar);
+
+size_t string_lastIndexOfChar(string theString, char theChar);
+
+size_t string_lastIndexOfCharIgnoreCase(string theString,
+        char theChar);
+
+bool string_containsChar(string theString, char theChar);
+
+bool string_containsCharIgnoreCase(string theString, char theChar);
+
+size_t string_indexOfWithin(string theString, string chars);
+
+size_t string_indexOfOutside(string theString, string chars);
+
+size_t string_indexOfWithinIgnoreCase(string theString, string chars);
+
+size_t string_indexOfOutsideIgnoreCase(string theString,
+        string chars);
 
 size_t string_length(string theString);
 
@@ -51,6 +90,8 @@ bool string_isEmpty(string theString);
 void string_toUpperCase(string theString);
 
 void string_toLowerCase(string theString);
+
+void string_reverse(string theString);
 
 string string_append(string theString, string extra);
 
