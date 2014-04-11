@@ -426,7 +426,8 @@ string string_replaceFirst(string theString, string old, string new) {
     return result;
 }
 
-string string_replaceAllReturnsNull(string theString, string old, string new) {
+string string_replaceRecursiveReturnsNull(string theString,
+        string old, string new) {
 
     string result, oldResult = theString;
 
@@ -444,8 +445,9 @@ string string_replaceAllReturnsNull(string theString, string old, string new) {
     return oldResult;
 }
 
-string string_replaceAll(string theString, string old, string new) {
-    string result = string_replaceAllReturnsNull(theString, old,
+string string_replaceRecursive(string theString, string old,
+        string new) {
+    string result = string_replaceRecursiveReturnsNull(theString, old,
             new);
     if (result == null) {
         result = string_clone(theString);
