@@ -20,6 +20,7 @@
 #include "Time.h"
 #include "Log.h"
 #include "Object.h"
+#include "PrimitiveWrappers.h"
 
 
 #define MAX(var1, var2) ((var1) > (var2) ? (var1) : (var2))

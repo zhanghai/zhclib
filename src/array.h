@@ -10,7 +10,7 @@
 #include "primitives.h"
 
 
-#define array_size(array) (sizeof(array) / sizeof(array[0]))
+#define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
 
 
 void array_copy(void *source, void *destination, size_t size,

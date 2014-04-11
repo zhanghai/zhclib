@@ -34,7 +34,7 @@ Object *Object_new() {
 
 OBJECT_DEFINE_DELETE(Object)
 
-string Object_toString(Object* this) {
+string Object_toString(Object *this) {
     char address[sizeof(void *) / 2 + 4] = "@0x";
     sprintf(address + 3, "%p", this);
     return string_concatenate(_(this, name), address);

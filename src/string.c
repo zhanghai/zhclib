@@ -36,8 +36,30 @@ string string_reallocate(string theString, size_t length) {
     return Memory_reallocate(theString, (length + 1) * sizeof(char));
 }
 
+/**
+ * Copy the source string to the destination string.
+ * @note The terminating null character of the source string will
+ *       also be copied to the destination string.
+ * @param source The source string.
+ * @param destination The destination string.
+ */
 void string_copy(string source, string destination) {
     strcpy(destination, source);
+}
+
+/**
+ * Copy the first length characters of the source string to
+ * the destination string.
+ * @note A null-character is guaranteed to be appended to the end of
+ *       the destination string.
+ * @param source The source string.
+ * @param destination The destination string.
+ * @param length The length to be copied.
+ */
+void string_copyWithLength(string source, string destination,
+        size_t length) {
+    strncpy(destination, source, length);
+    destination[length] = '\0';
 }
 
 string string_clone(string theString) {
@@ -100,12 +122,9 @@ size_t string_indexOfIgnoreCase(string theString, string subString) {
 
 size_t string_lastIndexOf(string theString, string subString) {
 
-    string stringReversed = string_clone(theString),
-            subStringReversed = string_clone(subString),
+    string stringReversed = string_reverse(theString),
+            subStringReversed = string_reverse(subString),
             position;
-
-    string_reverse(stringReversed);
-    string_reverse(subStringReversed);
 
     position = strstr(stringReversed, subStringReversed);
     Memory_free(stringReversed);
@@ -122,12 +141,9 @@ size_t string_lastIndexOf(string theString, string subString) {
 size_t string_lastIndexOfIgnoreCase(string theString,
         string subString) {
 
-    string stringUpper = string_clone(theString),
-            subStringUpper = string_clone(subString);
+    string stringUpper = string_toUpperCase(theString),
+            subStringUpper = string_toUpperCase(subString);
     size_t index;
-
-    string_toUpperCase(stringUpper);
-    string_toUpperCase(subStringUpper);
 
     index = string_lastIndexOf(stringUpper, subStringUpper);
     Memory_free(stringUpper);
@@ -173,10 +189,9 @@ size_t string_indexOfChar(string theString, char theChar) {
 
 size_t string_indexOfCharIgnoreCase(string theString, char theChar) {
 
-    string stringUpper = string_clone(theString);
+    string stringUpper = string_toUpperCase(theString);
     size_t index;
 
-    string_toUpperCase(stringUpper);
     theChar = toupper(theChar);
 
     index = string_indexOfChar(stringUpper, theChar);
@@ -197,10 +212,9 @@ size_t string_lastIndexOfChar(string theString, char theChar) {
 size_t string_lastIndexOfCharIgnoreCase(string theString,
         char theChar) {
 
-    string stringUpper = string_clone(theString);
+    string stringUpper = string_toUpperCase(theString);
     size_t index;
 
-    string_toUpperCase(stringUpper);
     theChar = toupper(theChar);
 
     index = string_lastIndexOfChar(stringUpper, theChar);
@@ -217,7 +231,7 @@ bool string_containsCharIgnoreCase(string theString, char theChar) {
     return string_indexOfCharIgnoreCase(theString, theChar) != -1;
 }
 
-size_t string_indexOfWithin(string theString, string chars) {
+size_t string_indexWithin(string theString, string chars) {
     string position = strpbrk(theString, chars);
     if (position == null) {
         return -1;
@@ -226,12 +240,12 @@ size_t string_indexOfWithin(string theString, string chars) {
     }
 }
 
-size_t string_indexOfOutside(string theString, string chars) {
+size_t string_indexOutside(string theString, string chars) {
 
     string start = theString,
             end = theString + string_length(theString);
 
-    while (start != end && string_indexOfWithin(start, chars) == 0) {
+    while (start != end && string_indexWithin(start, chars) == 0) {
         ++start;
     }
 
@@ -242,34 +256,28 @@ size_t string_indexOfOutside(string theString, string chars) {
     }
 }
 
-size_t string_indexOfWithinIgnoreCase(string theString,
+size_t string_indexWithinIgnoreCase(string theString,
         string chars) {
 
-    string stringUpper = string_clone(theString),
-            charsUpper = string_clone(chars);
+    string stringUpper = string_toUpperCase(theString),
+            charsUpper = string_toUpperCase(chars);
     size_t index;
 
-    string_toUpperCase(stringUpper);
-    string_toUpperCase(charsUpper);
-
-    index = string_indexOfWithin(stringUpper, charsUpper);
+    index = string_indexWithin(stringUpper, charsUpper);
     Memory_free(stringUpper);
     Memory_free(charsUpper);
 
     return index;
 }
 
-size_t string_indexOfOutsideIgnoreCase(string theString,
+size_t string_indexOutsideIgnoreCase(string theString,
         string chars) {
 
-    string stringUpper = string_clone(theString),
-            charsUpper = string_clone(chars);
+    string stringUpper = string_toUpperCase(theString),
+            charsUpper = string_toUpperCase(chars);
     size_t index;
 
-    string_toUpperCase(stringUpper);
-    string_toUpperCase(charsUpper);
-
-    index = string_indexOfOutside(stringUpper, charsUpper);
+    index = string_indexOutside(stringUpper, charsUpper);
     Memory_free(stringUpper);
     Memory_free(charsUpper);
 
@@ -284,33 +292,50 @@ bool string_isEmpty(string theString) {
     return string_length(theString) == 0;
 }
 
-void string_toUpperCase(string theString) {
-    size_t i, size;
-    size = string_length(theString);
-    for (i = 0; i < size; ++i) {
+string string_toUpperCase(string theString) {
+    string upper = string_clone(theString);
+    size_t i, length = string_length(upper);
+    for (i = 0; i < length; ++i) {
         // No conversion will be done if not possible.
-        theString[i] = toupper(theString[i]);
+        upper[i] = toupper(upper[i]);
     }
+    return upper;
 }
 
-void string_toLowerCase(string theString) {
-    size_t i, size;
-    size = string_length(theString);
-    for (i = 0; i < size; ++i) {
+string string_toLowerCase(string theString) {
+    string lower = string_clone(theString);
+    size_t i, length = string_length(lower);
+    for (i = 0; i < length; ++i) {
         // No conversion will be done if not possible.
-        theString[i] = tolower(theString[i]);
+        lower[i] = tolower(lower[i]);
     }
+    return lower;
 }
 
+/*
 void string_reverse(string theString) {
     char *start = theString,
             *end = start + string_length(theString) - 1,
             temp;
     while (start < end) {
-        SWAP(*start, *end, temp);
+        temp = *start; \
+        *start = *end; \
+        *end = temp; \
         ++start;
         --end;
     }
+}
+*/
+
+string string_reverse(string theString) {
+    size_t i, length = string_length(theString);
+    string reverse = string_allocate(length);
+    for (i = 0; i < length; ++i) {
+        // No conversion will be done if not possible.
+        reverse[i] = theString[length - 1 - i];
+    }
+    reverse[length] = '\0';
+    return reverse;
 }
 
 /**
@@ -338,7 +363,7 @@ string string_concatenate(string first, string second) {
     size_t firstLength = string_length(first);
     string concatenated = string_allocate(
             firstLength + string_length(second));
-    strcpy(concatenated + firstLength, second);
+    string_copy(concatenated + firstLength, second);
     return concatenated;
 }
 
@@ -352,9 +377,80 @@ string string_concatenate(string first, string second) {
 string string_subString(string theString, size_t start, size_t end) {
     size_t length = end - start;
     string subString = string_allocate(length);
-    strncpy(subString, theString + start, length);
-    theString[length] = '\0';
+    string_copyWithLength(theString + start, subString, length);
     return subString;
+}
+
+string string_trim(string theString) {
+    string start = theString,
+            end = theString + string_length(theString);
+    while (start < end && *start == ' ') {
+        ++start;
+    }
+    while (end > start && *(end - 1) == ' ') {
+        --end;
+    }
+    return string_subString(theString, start - theString,
+            end - theString);
+}
+
+string string_replaceFirstReturnsNull(string theString, string old,
+        string new) {
+
+    size_t index = string_indexOf(theString, old),
+            length, oldLength, newLength;
+    string result;
+
+    if (index == -1) {
+        return null;
+    }
+
+    length = string_length(theString);
+    oldLength = string_length(old);
+    newLength = string_length(new);
+    result = string_allocate(length - oldLength + newLength);
+    string_copyWithLength(theString, result, index);
+    string_copy(new, result + index);
+    string_copy(theString + index + oldLength,
+            result + index + newLength);
+
+    return result;
+}
+
+string string_replaceFirst(string theString, string old, string new) {
+    string result = string_replaceFirstReturnsNull(theString, old,
+            new);
+    if (result == null) {
+        result = string_clone(theString);
+    }
+    return result;
+}
+
+string string_replaceAllReturnsNull(string theString, string old, string new) {
+
+    string result, oldResult = theString;
+
+    if ((oldResult = string_replaceFirstReturnsNull(theString, old,
+            new)) == null) {
+        return null;
+    }
+
+    while ((result = string_replaceFirstReturnsNull(oldResult, old,
+            new)) != null) {
+        Memory_free(oldResult);
+        oldResult = result;
+    }
+
+    return oldResult;
+}
+
+string string_replaceAll(string theString, string old, string new) {
+    string result = string_replaceAllReturnsNull(theString, old,
+            new);
+    if (result == null) {
+        result = string_clone(theString);
+    }
+    return result;
 }
 
 #ifdef __USE_GNU_VASPRINTF__
@@ -382,6 +478,26 @@ string string_format(string format, ...) {
     return result;
 }
 #endif
+
+#define DEFINE_PARSE_PRIMITIVE(NAME, TYPE, FORMAT) \
+    size_t string_parse##NAME(string theString, TYPE *value) { \
+        size_t count; \
+        if (sscanf(theString, #FORMAT"%zn", value, &count) == 1) { \
+            return count; \
+        } else { \
+            return -1; \
+        } \
+    }
+
+DEFINE_PARSE_PRIMITIVE(Int, int, %d)
+
+DEFINE_PARSE_PRIMITIVE(Long, long, %ld)
+
+DEFINE_PARSE_PRIMITIVE(Float, float, %f)
+
+DEFINE_PARSE_PRIMITIVE(Double, double, %lf)
+
+#undef DEFINE_PARSE_PRIMITIVE
 
 /**
  * Make a deep copy of a string array.

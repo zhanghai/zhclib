@@ -30,6 +30,9 @@ string string_reallocate(string theString, size_t length);
 
 void string_copy(string source, string destination);
 
+void string_copyWithLength(string source, string destination,
+        size_t length);
+
 string string_clone(string theString);
 
 bool string_isEqual(string theString1, string theString2);
@@ -74,24 +77,24 @@ bool string_containsChar(string theString, char theChar);
 
 bool string_containsCharIgnoreCase(string theString, char theChar);
 
-size_t string_indexOfWithin(string theString, string chars);
+size_t string_indexWithin(string theString, string chars);
 
-size_t string_indexOfOutside(string theString, string chars);
+size_t string_indexOutside(string theString, string chars);
 
-size_t string_indexOfWithinIgnoreCase(string theString, string chars);
+size_t string_indexWithinIgnoreCase(string theString, string chars);
 
-size_t string_indexOfOutsideIgnoreCase(string theString,
+size_t string_indexOutsideIgnoreCase(string theString,
         string chars);
 
 size_t string_length(string theString);
 
 bool string_isEmpty(string theString);
 
-void string_toUpperCase(string theString);
+string string_toUpperCase(string theString);
 
-void string_toLowerCase(string theString);
+string string_toLowerCase(string theString);
 
-void string_reverse(string theString);
+string string_reverse(string theString);
 
 string string_append(string theString, string extra);
 
@@ -99,7 +102,32 @@ string string_concatenate(string first, string second);
 
 string string_subString(string theString, size_t start, size_t end);
 
+string string_trim(string theString);
+
+string string_replaceFirstReturnsNull(string theString, string old,
+        string new);
+
+string string_replaceFirst(string theString, string old, string new);
+
+string string_replaceAllReturnsNull(string theString, string old,
+        string new);
+
+string string_replaceAll(string theString, string old, string new);
+
 string string_format(string format, ...);
+
+#define DECLARE_PARSE_PRIMITIVE(NAME, TYPE) \
+    size_t string_parse##NAME(string theString, TYPE *value);
+
+DECLARE_PARSE_PRIMITIVE(Int, int)
+
+DECLARE_PARSE_PRIMITIVE(Long, long)
+
+DECLARE_PARSE_PRIMITIVE(Float, float)
+
+DECLARE_PARSE_PRIMITIVE(Double, double)
+
+#undef DECLARE_PARSE_PRIMITIVE
 
 void string_array_clone(string source[], string destination[],
         size_t size);

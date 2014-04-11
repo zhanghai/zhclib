@@ -69,9 +69,9 @@ void Object_finalize(Object *this);
 
 Object *Object_new();
 
-void Object_delete(Object* this);
+void Object_delete(Object *this);
 
-string Object_toString(Object* this);
+string Object_toString(Object *this);
 
 
 #endif /* _OBJECT_H_ */

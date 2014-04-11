@@ -31,9 +31,11 @@ void LinkedList_initialize(LinkedList *this, string name) {
 
 void LinkedList_finalize(LinkedList *this) {
 
-    LinkedListNode *node;
-    LINKED_LIST_FOR_EACH(this, node) {
+    LinkedListNode *node, *nextNode;
+    for (node = _(this, head); node != null; ) {
+        nextNode = node->next;
         $_(this, deleteNode, node);
+        node = nextNode;
     }
 
     Object_finalize((Object *)this);
@@ -67,10 +69,15 @@ LinkedListNode *LinkedList_newNode(void *data, LinkedListNode *previous,
 
 /**
  * @protected
- * Destroy a {@link LinkedListNode} instance.
+ * Destroy a {@link LinkedListNode} instance and free its data.
+ * @note You may want to override this function to deal with other
+ *       types of memory management.
  * @param node The node to be destroyed.
  */
 void LinkedList_deleteNode(LinkedListNode *node) {
+
+    Memory_free(node->data);
+
     Memory_free(node);
 }
 
