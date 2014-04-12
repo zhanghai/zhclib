@@ -28,6 +28,10 @@ string string_allocate(size_t length);
 
 string string_reallocate(string theString, size_t length);
 
+string string_subsititute(string *theString, string new);
+
+string string_subsitituteIfNotNull(string *theString, string new);
+
 void string_copy(string source, string destination);
 
 void string_copyWithLength(string source, string destination,
@@ -77,13 +81,29 @@ bool string_containsChar(string theString, char theChar);
 
 bool string_containsCharIgnoreCase(string theString, char theChar);
 
-size_t string_indexWithin(string theString, string chars);
+/*
+ * TODO
+ *
 
-size_t string_indexOutside(string theString, string chars);
+size_t string_indexWithin(string theString, string strings[]);
 
-size_t string_indexWithinIgnoreCase(string theString, string chars);
+size_t string_indexOutside(string theString, string strings[]);
+
+size_t string_indexWithinIgnoreCase(string theString,
+        string strings[]);
 
 size_t string_indexOutsideIgnoreCase(string theString,
+        string strings[]);
+*/
+
+size_t string_indexWithinChars(string theString, string chars);
+
+size_t string_indexOutsideChars(string theString, string chars);
+
+size_t string_indexWithinCharsIgnoreCase(string theString,
+        string chars);
+
+size_t string_indexOutsideCharsIgnoreCase(string theString,
         string chars);
 
 size_t string_length(string theString);
@@ -114,6 +134,17 @@ string string_replaceRecursiveReturnsNull(string theString,
 
 string string_replaceRecursive(string theString, string old,
         string new);
+
+/*
+ * TODO
+ *
+
+string string_replaceAllReturnsNull(string theString, string old,
+        string new);
+
+string string_replaceAll(string theString, string old, string new);
+
+*/
 
 string string_format(string format, ...);
 

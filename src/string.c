@@ -37,6 +37,26 @@ string string_reallocate(string theString, size_t length) {
 }
 
 /**
+ * Free the content of a string and make it reference a new string.
+ * @param theString Pointer to the original string.
+ * @param new The new string.
+ * @return The new string, for chaining function calls.
+ */
+string string_subsititute(string *theString, string new) {
+    Memory_free(*theString);
+    *theString = new;
+    return *theString;
+}
+
+string string_subsitituteIfNotNull(string *theString, string new) {
+    if (new == null) {
+        return *theString;
+    } else {
+        return string_subsititute(theString, new);
+    }
+}
+
+/**
  * Copy the source string to the destination string.
  * @note The terminating null character of the source string will
  *       also be copied to the destination string.
@@ -231,7 +251,7 @@ bool string_containsCharIgnoreCase(string theString, char theChar) {
     return string_indexOfCharIgnoreCase(theString, theChar) != -1;
 }
 
-size_t string_indexWithin(string theString, string chars) {
+size_t string_indexWithinChars(string theString, string chars) {
     string position = strpbrk(theString, chars);
     if (position == null) {
         return -1;
@@ -240,12 +260,13 @@ size_t string_indexWithin(string theString, string chars) {
     }
 }
 
-size_t string_indexOutside(string theString, string chars) {
+size_t string_indexOutsideChars(string theString, string chars) {
 
     string start = theString,
             end = theString + string_length(theString);
 
-    while (start != end && string_indexWithin(start, chars) == 0) {
+    while (start != end
+            && string_indexWithinChars(start, chars) == 0) {
         ++start;
     }
 
@@ -256,28 +277,28 @@ size_t string_indexOutside(string theString, string chars) {
     }
 }
 
-size_t string_indexWithinIgnoreCase(string theString,
+size_t string_indexWithinCharsIgnoreCase(string theString,
         string chars) {
 
     string stringUpper = string_toUpperCase(theString),
             charsUpper = string_toUpperCase(chars);
     size_t index;
 
-    index = string_indexWithin(stringUpper, charsUpper);
+    index = string_indexWithinChars(stringUpper, charsUpper);
     Memory_free(stringUpper);
     Memory_free(charsUpper);
 
     return index;
 }
 
-size_t string_indexOutsideIgnoreCase(string theString,
+size_t string_indexOutsideCharsIgnoreCase(string theString,
         string chars) {
 
     string stringUpper = string_toUpperCase(theString),
             charsUpper = string_toUpperCase(chars);
     size_t index;
 
-    index = string_indexOutside(stringUpper, charsUpper);
+    index = string_indexOutsideChars(stringUpper, charsUpper);
     Memory_free(stringUpper);
     Memory_free(charsUpper);
 
