@@ -140,6 +140,17 @@ size_t string_indexOfIgnoreCase(string theString, string subString) {
     }
 }
 
+size_t string_indexOfStartingFrom(string theString, size_t start,
+        string subString) {
+    return string_indexOf(theString + start, subString) + start;
+}
+
+size_t string_indexOfStartingFromIgnoreCase(string theString,
+        size_t start, string subString) {
+    return string_indexOfIgnoreCase(theString + start, subString)
+            + start;
+}
+
 size_t string_lastIndexOf(string theString, string subString) {
 
     string stringReversed = string_reverse(theString),
@@ -169,6 +180,22 @@ size_t string_lastIndexOfIgnoreCase(string theString,
     Memory_free(stringUpper);
     Memory_free(subStringUpper);
 
+    return index;
+}
+
+size_t string_lastIndexOfEndingTo(string theString, size_t end,
+        string subString) {
+    string target = string_subString(theString, 0, end);
+    size_t index = string_lastIndexOf(target, subString);
+    Memory_free(target);
+    return index;
+}
+
+size_t string_lastIndexOfEndingToIgnoreCase(string theString,
+        size_t end, string subString) {
+    string target = string_subString(theString, 0, end);
+    size_t index = string_lastIndexOfIgnoreCase(target, subString);
+    Memory_free(target);
     return index;
 }
 
@@ -220,6 +247,17 @@ size_t string_indexOfCharIgnoreCase(string theString, char theChar) {
     return index;
 }
 
+size_t string_indexOfCharStartingFrom(string theString,
+        size_t start, char theChar) {
+    return string_indexOfChar(theString + start, theChar) + start;
+}
+
+size_t string_indexOfCharStartingFromIgnoreCase(string theString,
+        size_t start, char theChar) {
+    return string_indexOfCharIgnoreCase(theString + start, theChar)
+            + start;
+}
+
 size_t string_lastIndexOfChar(string theString, char theChar) {
     string position = strrchr(theString, theChar);
     if (position == null) {
@@ -240,6 +278,23 @@ size_t string_lastIndexOfCharIgnoreCase(string theString,
     index = string_lastIndexOfChar(stringUpper, theChar);
     Memory_free(stringUpper);
 
+    return index;
+}
+
+size_t string_lastIndexOfCharEndingTo(string theString, size_t end,
+        char theChar) {
+    string target = string_subString(theString, 0, end);
+    size_t index = string_lastIndexOfChar(target, theChar);
+    Memory_free(target);
+    return index;
+}
+
+size_t string_lastIndexOfCharEndingToIgnoreCase(string theString,
+        size_t end, char theChar) {
+    string target = string_subString(theString, 0, end);
+    size_t index = string_lastIndexOfCharIgnoreCase(target,
+            theChar);
+    Memory_free(target);
     return index;
 }
 
@@ -418,10 +473,10 @@ string string_trim(string theString) {
 string string_replaceFirstReturnsNull(string theString, string old,
         string new) {
 
-    size_t index = string_indexOf(theString, old),
-            length, oldLength, newLength;
+    size_t index, length, oldLength, newLength;
     string result;
 
+    index = string_indexOf(theString, old);
     if (index == -1) {
         return null;
     }
@@ -441,6 +496,84 @@ string string_replaceFirstReturnsNull(string theString, string old,
 string string_replaceFirst(string theString, string old, string new) {
     string result = string_replaceFirstReturnsNull(theString, old,
             new);
+    if (result == null) {
+        result = string_clone(theString);
+    }
+    return result;
+}
+
+string string_replaceFirstStartingFromReturnsNull(string theString,
+        size_t start, string old, string new) {
+
+    size_t index, length, oldLength, newLength;
+    string result;
+
+    index = string_indexOfStartingFrom(theString, start, old);
+    if (index == -1) {
+        return null;
+    }
+
+    length = string_length(theString);
+    oldLength = string_length(old);
+    newLength = string_length(new);
+    result = string_allocate(length - oldLength + newLength);
+    string_copyWithLength(theString, result, index);
+    string_copy(new, result + index);
+    string_copy(theString + index + oldLength,
+            result + index + newLength);
+
+    return result;
+}
+
+string string_replaceFirstStartingFrom(string theString,
+        size_t start, string old, string new) {
+    string result = string_replaceFirstStartingFromReturnsNull(
+            theString, start, old, new);
+    if (result == null) {
+        result = string_clone(theString);
+    }
+    return result;
+}
+
+string string_replaceAllReturnsNull(string theString, string old,
+        string new) {
+
+    size_t index, length, oldLength, newLength;
+    string result, oldResult;
+
+    index = string_indexOf(theString, old);
+    if (index == -1) {
+        return null;
+    }
+
+    oldLength = string_length(old);
+    newLength = string_length(new);
+
+    length = string_length(theString);
+    oldResult = string_allocate(length - oldLength + newLength);
+    string_copyWithLength(theString, oldResult, index);
+    string_copy(new, oldResult + index);
+    string_copy(theString + index + oldLength,
+            oldResult + index + newLength);
+
+    while ((index = string_indexOfStartingFrom(oldResult,
+            index + newLength, old)) != -1) {
+        length = string_length(oldResult);
+        result = string_allocate(length - oldLength + newLength);
+        string_copyWithLength(oldResult, result, index);
+        string_copy(new, result + index);
+        string_copy(oldResult + index + oldLength,
+                result + index + newLength);
+        Memory_free(oldResult);
+        oldResult = result;
+    }
+
+    return oldResult;
+}
+
+string string_replaceAll(string theString, string old, string new) {
+    string result = string_replaceAllReturnsNull(
+            theString, old, new);
     if (result == null) {
         result = string_clone(theString);
     }

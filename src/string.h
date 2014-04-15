@@ -51,10 +51,22 @@ size_t string_indexOf(string theString, string subString);
 
 size_t string_indexOfIgnoreCase(string theString, string subString);
 
+size_t string_indexOfStartingFrom(string theString, size_t start,
+        string subString);
+
+size_t string_indexOfStartingFromIgnoreCase(string theString,
+        size_t start, string subString);
+
 size_t string_lastIndexOf(string theString, string subString);
 
 size_t string_lastIndexOfIgnoreCase(string theString,
         string subString);
+
+size_t string_lastIndexOfEndingTo(string theString, size_t end,
+        string subString);
+
+size_t string_lastIndexOfEndingToIgnoreCase(string theString,
+        size_t end, string subString);
 
 bool string_contains(string theString, string subString);
 
@@ -72,10 +84,22 @@ size_t string_indexOfChar(string theString, char theChar);
 
 size_t string_indexOfCharIgnoreCase(string theString, char theChar);
 
+size_t string_indexOfCharStartingFrom(string theString, size_t start,
+        char theChar);
+
+size_t string_indexOfCharStartingFromIgnoreCase(string theString,
+        size_t start, char theChar);
+
 size_t string_lastIndexOfChar(string theString, char theChar);
 
 size_t string_lastIndexOfCharIgnoreCase(string theString,
         char theChar);
+
+size_t string_lastIndexOfCharEndingTo(string theString, size_t end,
+        char theChar);
+
+size_t string_lastIndexOfCharEndingToIgnoreCase(string theString,
+        size_t end, char theChar);
 
 bool string_containsChar(string theString, char theChar);
 
@@ -129,22 +153,22 @@ string string_replaceFirstReturnsNull(string theString, string old,
 
 string string_replaceFirst(string theString, string old, string new);
 
-string string_replaceRecursiveReturnsNull(string theString,
+string string_replaceFirstStartingFromReturnsNull(string theString,
+        size_t start, string old, string new);
+
+string string_replaceFirstStartingFrom(string theString, size_t start,
         string old, string new);
-
-string string_replaceRecursive(string theString, string old,
-        string new);
-
-/*
- * TODO
- *
 
 string string_replaceAllReturnsNull(string theString, string old,
         string new);
 
 string string_replaceAll(string theString, string old, string new);
 
-*/
+string string_replaceRecursiveReturnsNull(string theString,
+        string old, string new);
+
+string string_replaceRecursive(string theString, string old,
+        string new);
 
 string string_format(string format, ...);
 
