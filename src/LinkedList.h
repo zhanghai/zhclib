@@ -3,6 +3,25 @@
  * @author Zhang Hai
  */
 
+/*
+ * Copyright (C) 2014 Zhang Hai
+ *
+ * This file is part of zhclib.
+ *
+ * zhclib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zhclib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with zhclib.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #ifndef _LINKED_LIST_H_
 #define _LINKED_LIST_H_
 
@@ -44,17 +63,17 @@ typedef LinkedListNode *(*LinkedList_MethodNewNode)(void *data,
 typedef void (*LinkedList_MethodDeleteNode)(
         LinkedListNode *node);
 typedef LinkedListNode *(*LinkedList_MethodAddStart)(
-        LinkedList *this, void *book);
+        LinkedList *this, void *data);
 typedef LinkedListNode *(*LinkedList_MethodAddEnd)(LinkedList *this,
-        void *book);
+        void *data);
 typedef LinkedListNode *(*LinkedList_MethodInsertBefore)(
-        LinkedList *this, LinkedListNode *node, void *book);
+        LinkedList *this, LinkedListNode *node, void *data);
 typedef LinkedListNode *(*LinkedList_MethodInsertAfter)(
-        LinkedList *this, LinkedListNode *node, void *book);
+        LinkedList *this, LinkedListNode *node, void *data);
 typedef LinkedListNode *(*LinkedList_MethodRemoveNode)(
         LinkedList *this, LinkedListNode *node);
 typedef void (*LinkedList_MethodRemove)(LinkedList *this,
-        void *book);
+        void *data);
 typedef void (*LinkedList_MethodSwap)(LinkedList *this,
         LinkedListNode *node1, LinkedListNode *node2);
 typedef void (*LinkedList_MethodSort)(LinkedList *this,

@@ -3,6 +3,25 @@
  * @author Zhang Hai
  */
 
+/*
+ * Copyright (C) 2014 Zhang Hai
+ *
+ * This file is part of zhclib.
+ *
+ * zhclib is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * zhclib is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with zhclib.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "string.h"
 
 #ifdef __gnu_linux__
@@ -638,20 +657,20 @@ string string_format(string format, ...) {
 #define DEFINE_PARSE_PRIMITIVE(NAME, TYPE, FORMAT) \
     size_t string_parse##NAME(string theString, TYPE *value) { \
         size_t count; \
-        if (sscanf(theString, #FORMAT"%zn", value, &count) == 1) { \
+        if (sscanf(theString, FORMAT"%zn", value, &count) == 1) { \
             return count; \
         } else { \
             return -1; \
         } \
     }
 
-DEFINE_PARSE_PRIMITIVE(Int, int, %d)
+DEFINE_PARSE_PRIMITIVE(Int, int, "%d")
 
-DEFINE_PARSE_PRIMITIVE(Long, long, %ld)
+DEFINE_PARSE_PRIMITIVE(Long, long, "%ld")
 
-DEFINE_PARSE_PRIMITIVE(Float, float, %f)
+DEFINE_PARSE_PRIMITIVE(Float, float, "%f")
 
-DEFINE_PARSE_PRIMITIVE(Double, double, %lf)
+DEFINE_PARSE_PRIMITIVE(Double, double, "%lf")
 
 #undef DEFINE_PARSE_PRIMITIVE
 
