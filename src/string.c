@@ -135,14 +135,12 @@ size_t string_indexOf(string theString, string subString) {
 #ifndef __USE_GNU_STRCASESTR__
 string strcasestr(string theString, string subString) {
 
-    string stringUpper = string_clone(theString),
-            subStringUpper = string_clone(subString),
+    string stringUpper = string_toUpperCase(theString),
+            subStringUpper = string_toUpperCase(subString),
             position;
 
-    string_toUpperCase(stringUpper);
-    string_toUpperCase(subStringUpper);
-
     position = strstr(stringUpper, subStringUpper);
+
     Memory_free(stringUpper);
     Memory_free(subStringUpper);
 

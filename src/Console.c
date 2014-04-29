@@ -95,6 +95,8 @@ string Console_readLine(string message) {
     string line;
     size_t size = SIZE_STEP, i = 0;
 
+    Console_print(message);
+
     line = Memory_allocate(size * sizeof(char));
     while ((c = getchar()) != '\n' && c != EOF) {
         if (i == size) {
